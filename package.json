@@ -1,0 +1,23 @@
+{
+  "name": "fear-api-gateway",
+  "version": "1.0.0",
+  "description": "API Gateway for FEAR stack",
+  "main": "main.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/feardevelopment/fear-api-gateway.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/feardevelopment/fear-api-gateway/issues"
+  },
+  "homepage": "https://github.com/feardevelopment/fear-api-gateway#readme",
+  "dependencies": {
+    "fastify": "^3.9.2"
+  }
+}
