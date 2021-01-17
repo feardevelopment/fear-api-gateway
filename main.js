@@ -4,10 +4,20 @@ const dummy = require("./dummies/users.json")
 
 // Declare a route
 fastify.post('/login', async (request, reply) => {
-    if(request.body.username === dummy.user1.username && request.body.password === dummy.user1.password){
-        return {token: 'abcdefghijkl'}
+    if(dummy[request.body.username]?.password === request.body.password){
+        return { token: 'abcdefghijkl'+ request.body.username}
     }
   return { status: 'wrong username or password' }
+})
+
+fastify.post('/register', async (request, reply) => {
+  if(!dummy[request.body.username]){
+      dummy[request.body.username] = {
+        password: request.body.password
+      }
+      return { message: 'Registration done!' }
+  }
+return { status: 'wrong username or password' }
 })
 
 // Run the server!
