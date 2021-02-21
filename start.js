@@ -72,24 +72,24 @@ brokerNode2.createService({
           },
           password: ctx.params.password
         }
-        return 'OK'
+        return { message: 'OK' }
       }
-      return 'REGISTRATION FAILED'
+      return { message: 'REGISTRATION FAILED' }
     },
     login(ctx) {
       if (validateLogin(ctx.params.email, ctx.params.password)) {
         let token = 'token__' + ctx.params.email
         auth.tokens[token] = ctx.params.email
-        return token
+        return { token }
       }
-      return 'LOGIN FAILED'
+      return { message: 'LOGIN FAILED' }
     },
     validate(ctx) {
       let user = getUserByToken(ctx.params.token)
       if (!user) {
-        return 'TOKEN INVALID'
+        return { message: 'TOKEN INVALID' }
       }
-      return user
+      return { user }
     }
   }
 })
