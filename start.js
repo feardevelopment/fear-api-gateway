@@ -23,7 +23,12 @@ brokerNode1.createService({
           "POST /register": "auth.register",
           "POST /login": "auth.login",
           "POST /validate": "auth.validate"
-        }
+        },
+        cors: {
+          origin: ["http://localhost:3000", "https://localhost:4000"],
+          methods: ["GET", "OPTIONS", "POST"],
+          credentials: false
+      },
       }
     ]
   }
