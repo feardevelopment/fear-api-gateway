@@ -9,22 +9,6 @@ const brokerNode1 = new ServiceBroker({
 brokerNode1.createService({
   name: "gateway",
   mixins: [HTTPServer],
-  settings: {
-    cors: {
-      // Configures the Access-Control-Allow-Origin CORS header.
-      origin: "*",
-      // Configures the Access-Control-Allow-Methods CORS header. 
-      methods: ["GET", "OPTIONS", "POST", "PUT", "DELETE"],
-      // Configures the Access-Control-Allow-Headers CORS header.
-      allowedHeaders: [],
-      // Configures the Access-Control-Expose-Headers CORS header.
-      exposedHeaders: [],
-      // Configures the Access-Control-Allow-Credentials CORS header.
-      credentials: false,
-      // Configures the Access-Control-Max-Age CORS header.
-      maxAge: 3600
-  },
-  },
 
   settings: {
     routes: [
@@ -35,7 +19,7 @@ brokerNode1.createService({
           "POST /validate": "auth.validate"
         },
         cors: {
-          origin: ["http://localhost:4200", "https://localhost:4000"],
+          origin: ["http://localhost:4200"],
           methods: ["GET", "OPTIONS", "POST"],
           credentials: false
         },
@@ -59,8 +43,8 @@ const auth = {
 
   },
   users: {
-    "asda@asda.asda":{
-      userdata:{
+    "asda@asda.asda": {
+      userdata: {
         email: "asda@asda.asda"
       },
       password: "pwhsh"
@@ -68,12 +52,12 @@ const auth = {
   }
 }
 
-function validateLogin(email, password){
+function validateLogin(email, password) {
   return auth.users[email]?.password === password
 }
 
-function getUserByToken(token){
-  return  auth.users[auth.tokens[token]]?.userdata
+function getUserByToken(token) {
+  return auth.users[auth.tokens[token]]?.userdata
 }
 
 brokerNode2.createService({
@@ -81,10 +65,10 @@ brokerNode2.createService({
 
   actions: {
     register(ctx) {
-      if(!auth.users[ctx.params.email]){
+      if (!auth.users[ctx.params.email]) {
         auth.users[ctx.params.email] = {
-          userdata:{
-            email:ctx.params.email
+          userdata: {
+            email: ctx.params.email
           },
           password: ctx.params.password
         }
@@ -93,21 +77,21 @@ brokerNode2.createService({
       return 'REGISTRATION FAILED'
     },
     login(ctx) {
-      if(validateLogin(ctx.params.email, ctx.params.password)){
+      if (validateLogin(ctx.params.email, ctx.params.password)) {
         let token = 'token__' + ctx.params.email
         auth.tokens[token] = ctx.params.email
         return token
       }
       return 'LOGIN FAILED'
     },
-    validate(ctx){
+    validate(ctx) {
       let user = getUserByToken(ctx.params.token)
-      if(!user){
+      if (!user) {
         return 'TOKEN INVALID'
       }
       return user
     }
   }
 })
-    
+
 Promise.all([brokerNode1.start(), brokerNode2.start()]);
