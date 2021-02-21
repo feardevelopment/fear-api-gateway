@@ -9,6 +9,12 @@ const brokerNode1 = new ServiceBroker({
 brokerNode1.createService({
   name: "gateway",
   mixins: [HTTPServer],
+  settings: {
+    cors: {
+        methods: ["DELETE", "GET", "HEAD", "OPTIONS", "PATCH", "POST", "PUT"],
+        origin: "*",
+    }
+  },
 
   settings: {
     routes: [
