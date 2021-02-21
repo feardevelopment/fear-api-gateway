@@ -12,7 +12,7 @@ brokerNode1.createService({
   settings: {
     cors: {
       // Configures the Access-Control-Allow-Origin CORS header.
-      origin: "*",
+      origin: ["http://localhost:4200", "https://localhost:4000"],,
       // Configures the Access-Control-Allow-Methods CORS header. 
       methods: ["GET", "OPTIONS", "POST", "PUT", "DELETE"],
       // Configures the Access-Control-Allow-Headers CORS header.
@@ -34,11 +34,7 @@ brokerNode1.createService({
           "POST /login": "auth.login",
           "POST /validate": "auth.validate"
         },
-        cors: {
-          origin: ["http://localhost:4200", "https://localhost:4000"],
-          methods: ["GET", "OPTIONS", "POST"],
-          credentials: false
-        },
+
       }
     ]
   }
