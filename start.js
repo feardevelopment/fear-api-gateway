@@ -30,9 +30,21 @@ brokerNode1.createService({
     routes: [
       {
         aliases: {
-          "POST /register": "auth.register",
-          "POST /login": "auth.login",
-          "POST /validate": "auth.validate"
+          "POST /user/register": "user.registerUser",
+          "POST /auth/login": "auth.login",
+          "POST /validate": "auth.validate",
+
+          //training
+          "GET /studies/trainings/available": "studies.getAvailableTrainings",
+          "POST /user/training/new": "user.setTraining",
+
+          //emails
+          "GET /user/mailbox": "email.getMailBox",
+          "GET /user/mailbox/:uid": "email.getMail",
+          "POST /user/mailbox/generate": "email.generateMailsForUser",
+
+          // any
+          "POST /any/call": "any.call"
         },
         cors: {
           origin: ["http://localhost:4200", "https://localhost:4000"],
@@ -52,62 +64,38 @@ const brokerNode2 = new ServiceBroker({
   transporter: "NATS"
 })
 
-
-
-const auth = {
-  tokens: {
-
-  },
-  users: {
-    "asda@asda.asda":{
-      userdata:{
-        email: "asda@asda.asda"
-      },
-      password: "pwhsh"
-    }
-  }
-}
-
-function validateLogin(email, password){
-  return auth.users[email]?.password === password
-}
-
-function getUserByToken(token){
-  return  auth.users[auth.tokens[token]]?.userdata
-}
-
-brokerNode2.createService({
-  name: "auth",
-
-  actions: {
-    register(ctx) {
-      if(!auth.users[ctx.params.email]){
-        auth.users[ctx.params.email] = {
-          userdata:{
-            email:ctx.params.email
-          },
-          password: ctx.params.password
-        }
-        return 'OK'
-      }
-      return 'REGISTRATION FAILED'
-    },
-    login(ctx) {
-      if(validateLogin(ctx.params.email, ctx.params.password)){
-        let token = 'token__' + ctx.params.email
-        auth.tokens[token] = ctx.params.email
-        return token
-      }
-      return 'LOGIN FAILED'
-    },
-    validate(ctx){
-      let user = getUserByToken(ctx.params.token)
-      if(!user){
-        return 'TOKEN INVALID'
-      }
-      return user
-    }
-  }
+const brokerNode3 = new ServiceBroker({
+  nodeID: "node-3",
+  transporter: "NATS"
 })
-    
-Promise.all([brokerNode1.start(), brokerNode2.start()]);
+
+const brokerNode4 = new ServiceBroker({
+  nodeID: "node-4",
+  transporter: "NATS"
+})
+
+const brokerNode5 = new ServiceBroker({
+  nodeID: "ANY",
+  transporter: "NATS"
+})
+
+const brokerNode6 = new ServiceBroker({
+  nodeID: "user-node",
+  transporter: "NATS"
+})
+
+
+brokerNode2.createService(require('./mocks/auth'))
+brokerNode3.createService(require('./mocks/email'))
+brokerNode4.createService(require('./mocks/studies'))
+brokerNode5.createService(require('./mocks/any'))
+brokerNode6.createService(require('./mocks/user'))
+/*
+(new ServiceBroker({
+  nodeID: "node-5",
+  transporter: "NATS"
+})).createService(require('./mocks/email'))
+*/
+
+  
+Promise.all([brokerNode1.start(), brokerNode2.start(), brokerNode3.start(), brokerNode4.start(),  brokerNode5.start(), brokerNode6.start()]);
