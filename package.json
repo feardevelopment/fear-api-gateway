@@ -18,6 +18,7 @@
   },
   "homepage": "https://github.com/feardevelopment/fear-api-gateway#readme",
   "dependencies": {
+    "faker": "^5.4.0",
     "fastify": "^3.9.2",
     "moleculer": "^0.14.12",
     "moleculer-web": "^0.9.1",
