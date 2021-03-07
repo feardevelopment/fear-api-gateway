@@ -59,11 +59,12 @@ module.exports = {
 
         setTraining: {
             params: {
-                userID: 'string',
+                token: 'string',
                 training: 'string',
             },
             handler(ctx) {
-                return setTraining(ctx.params.userID, ctx.params.training)
+                let userID = (await ctx.call('auth.getUserIDByToken', ctx.params.token)).result
+                return setTraining(userID, ctx.params.training)
             }
         },
 
@@ -80,7 +81,7 @@ const users = {
             email: "asda@asda.asda"
         },
     }
-  }
+}
 
 usersByID = {
     'uid': 'username'

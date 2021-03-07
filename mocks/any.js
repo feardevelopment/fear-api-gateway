@@ -1,6 +1,3 @@
-const { BrokerNode } = require("moleculer");
-
-
 module.exports = {
     name: "any",
     actions: {

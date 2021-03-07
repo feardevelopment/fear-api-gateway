@@ -3,7 +3,8 @@ const HTTPServer = require("moleculer-web");
 
 const brokerNode1 = new ServiceBroker({
   nodeID: "node-1",
-  transporter: "NATS"
+  transporter: "NATS",
+  hotReload: true
 })
 
 brokerNode1.createService({
@@ -45,41 +46,40 @@ brokerNode1.createService({
 
 const brokerNode2 = new ServiceBroker({
   nodeID: "node-2",
-  transporter: "NATS"
+  transporter: "NATS",
+  hotReload: true
 })
 
 const brokerNode3 = new ServiceBroker({
   nodeID: "node-3",
-  transporter: "NATS"
+  transporter: "NATS",
+  hotReload: true
 })
 
 const brokerNode4 = new ServiceBroker({
   nodeID: "node-4",
-  transporter: "NATS"
+  transporter: "NATS",
+  hotReload: true
 })
 
 const brokerNode5 = new ServiceBroker({
   nodeID: "ANY",
-  transporter: "NATS"
+  transporter: "NATS",
+  hotReload: true
 })
 
 const brokerNode6 = new ServiceBroker({
   nodeID: "user-node",
-  transporter: "NATS"
+  transporter: "NATS",
+  hotReload: true
 })
+ 
 
-
-brokerNode2.createService(require('./mocks/auth'))
-brokerNode3.createService(require('./mocks/email'))
-brokerNode4.createService(require('./mocks/studies'))
-brokerNode5.createService(require('./mocks/any'))
-brokerNode6.createService(require('./mocks/user'))
-/*
-(new ServiceBroker({
-  nodeID: "node-5",
-  transporter: "NATS"
-})).createService(require('./mocks/email'))
-*/
+brokerNode2.loadService('./mocks/auth')
+brokerNode3.loadService('./mocks/email')
+brokerNode4.loadService('./mocks/studies')
+brokerNode5.loadService('./mocks/any')
+brokerNode6.loadService('./mocks/user')
 
   
 Promise.all([brokerNode1.start(), brokerNode2.start(), brokerNode3.start(), brokerNode4.start(),  brokerNode5.start(), brokerNode6.start()]);

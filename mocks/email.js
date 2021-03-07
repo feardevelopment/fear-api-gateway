@@ -4,7 +4,6 @@ const faker = require('faker')
 const mailLists = {
 }
 
-
 const mails = {
 }
 
@@ -32,7 +31,12 @@ module.exports = {
                 uid: 'string', //uid of the mail
             },
             handler(ctx) {
-                return mails[ctx.params.userID][ctx.params.uid]
+                const mailsOfUser = mails[ctx.params.userID]
+                if(mailsOfUser){
+                    const mail = mailsOfUser[ctx.params.uid]
+                    return mail ? validResult(mail) : errorResult('Mail not found for uid: ' + uid)
+                }
+                return [ctx.params.uid]
             }
         },
 
@@ -79,5 +83,24 @@ function createFakeEmailBody(header) {
         subject: header.subject,
         date: header.date,
         body: faker.lorem.paragraphs()
+    }
+}
+
+
+
+
+function validResult(result){
+    return {
+        type: 'OK',
+        code: 200,
+        result
+    }
+}
+
+function errorResult(error) {
+    return {
+        type: 'ERROR',
+        code: 500,
+        result: error
     }
 }
