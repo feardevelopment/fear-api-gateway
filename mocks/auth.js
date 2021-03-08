@@ -73,7 +73,8 @@ module.exports = {
                 }
                 return errorResult('Token not found!')
             }
-        }
+        },
+        getUserIDByToken
     }
 }
   
@@ -104,8 +105,9 @@ function validateCredentials(uid, password) {
     return user?.password === password
 }
 
-function getUserIDByToken(token){
-    return  auth.tokens[token]
+function getUserIDByToken(ctx){
+    const token = ctx.params.token;
+    return auth.tokens[token]
 }
 
 function createTokenForUser(uid){
