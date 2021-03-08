@@ -40,7 +40,7 @@ module.exports = {
             params:{
                 username: 'string'
             },   
-            async handler(ctx){
+            handler(ctx){
                 console.log(ctx.params);
                 let result = getUserByUsername(ctx.params.username)
                 return result ? {uid: result} : {}
@@ -62,8 +62,8 @@ module.exports = {
                 token: 'string',
                 training: 'string',
             },
-            handler(ctx) {
-                let userID = (await ctx.call('auth.getUserIDByToken', ctx.params.token)).result
+            async handler(ctx) {
+                let userID = (await ctx.call('auth.getUserIDByToken', { token: ctx.params.token }))
                 return setTraining(userID, ctx.params.training)
             }
         },
@@ -99,7 +99,12 @@ function createUser(username, userID, userObject) {
 }
 
 function setTraining(userID, training) {
-    users[userID].training = training
+    if(users[userID]) {
+        users[userID].training = training
+        return validResult('Sikeres szak választás!')
+    } else {
+        return errorResult('Nem sikerült a szak választás!')
+    }
 }
 
 function getUserByUsername(username){
